@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/jpeg" href="Logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<title>Feedback &amp; Help — NOWNET Production</title>
+<meta name="description" content="Request work, get help, or send feedback to NOWNET Production. Our team reads every message.">
+</head>
+<body>
+
+<div class="bg-orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+<div class="bg-grid"></div>
+<div class="bg-noise"></div>
+
+<header>
+  <nav class="nav">
+    <a class="nav-logo" href="index.html">
+      <img src="Logo.jpg" alt="NOWNET Logo" onerror="this.onerror=null;this.src='Nownet_Full_Logo.png'">
+      <div class="brand">NOWNET<small>PRODUCTION</small></div>
+    </a>
+    <button class="dots-btn" id="dotsBtn" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="dropdown" id="dropdown">
+      <div class="dd-label">Menu</div>
+      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Home</a>
+      <a href="works.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Works</a>
+      <a href="ai.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.5-3 5.7V17a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-2.3C6.2 13.5 5 11.4 5 9a7 7 0 0 1 7-7z"/><path d="M9 22h6"/></svg>NOWNET AI<span class="dd-badge">LIVE</span></a>
+      <a href="feedback.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 1 1 16.1-3.8z"/></svg>Feedback &amp; Help</a>
+      <hr>
+      <div class="dd-label">Official</div>
+      <a href="https://t.me/NOWNETOFFICIAL" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.9 4.6 18.8 19c-.2 1-.8 1.2-1.7.8l-4.6-3.4-2.2 2.1c-.3.3-.5.5-1 .5l.3-4.6L18 6.9c.4-.3-.1-.5-.6-.2L7.2 13.2 2.7 11.8c-1-.3-1-1 .2-1.4l17.7-6.8c.8-.3 1.5.2 1.3 1z"/></svg>Telegram Channel</a>
+      <a href="https://janitorai.com/profiles/eff6ac94-8b0b-4968-8f1f-2b58580947f5_profile-of-nownet" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Janitor AI</a>
+      <a href="https://character.ai/profile/NOWNET_CAI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg>Character AI</a>
+      <hr>
+      <a href="mailto:nownetofficial@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>Contact</a>
+    </div>
+  </nav>
+</header>
+
+
+<div class="page-hero">
+  <div class="eyebrow">Talk To Us</div>
+  <h1 style="margin-top:18px">Feedback &amp; Help</h1>
+  <div class="sub">Requests · Support · Ideas</div>
+  <p class="desc">Need a website, design, ebook help, AI integration — or just want our team to look at something? Fill in the forms below and they go straight to our inbox.</p>
+</div>
+
+<!-- ================= REQUEST WORK ================= -->
+<section class="wrap" id="work">
+  <div class="sec-tag reveal">Work with us</div>
+  <h2 class="reveal">Request Work / Get Help</h2>
+  <p class="sec-desc reveal">Our team reviews every request and will notice you.</p>
+  <div class="form-wrap glass reveal">
+    <form id="workForm">
+      <div class="f-row">
+        <input type="text" id="w-name" placeholder="Your name" required>
+        <input type="email" id="w-email" placeholder="Your email" required>
+      </div>
+      <div class="f-row">
+        <select id="w-type" required>
+          <option value="" disabled selected>What do you need?</option>
+          <option>Website / Web page</option>
+          <option>Logo / Design / Branding</option>
+          <option>Novel / Ebook help</option>
+          <option>AI integration / AI help</option>
+          <option>Support for a NOWNET project</option>
+          <option>Share an idea / Collaboration</option>
+          <option>Other</option>
+        </select>
+        <input type="text" id="w-budget" placeholder="Budget (optional)">
+      </div>
+      <textarea id="w-msg" placeholder="Describe your project or question — our team will notice you..." required></textarea>
+      <button class="btn btn-primary" type="submit" style="border:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+        Send Request
+      </button>
+      <div class="f-note">Delivered to <b>nownetofficial@gmail.com</b> via your mail app. We read every message.</div>
+    </form>
+  </div>
+</section>
+
+<!-- ================= FEEDBACK ================= -->
+<section class="wrap" id="feedback">
+  <div class="sec-tag reveal">We'd love to hear from you</div>
+  <h2 class="reveal">Feedback</h2>
+  <p class="sec-desc reveal">Used our work or visited one of our projects? Tell us what you think — feedback shapes everything we build next.</p>
+  <div class="form-wrap glass reveal">
+    <form id="fbForm">
+      <div class="f-row">
+        <input type="text" id="fb-name" placeholder="Your name" required>
+        <input type="email" id="fb-email" placeholder="Your email (optional)">
+      </div>
+      <textarea id="fb-msg" placeholder="Write your feedback about NOWNET Production or any of our projects..." required></textarea>
+      <button class="btn btn-primary" type="submit" style="border:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+        Send Feedback
+      </button>
+      <div class="f-note">Delivered to <b>nownetofficial@gmail.com</b>. Our team will notice you.</div>
+    </form>
+  </div>
+</section>
+
+
+<footer>
+  <img src="Nownet_Full_Logo.png" onerror="this.onerror=null;this.src='Logo.jpg'" alt="NOWNET">
+  <div class="f-brand">NOWNET PRODUCTION</div>
+  <p>Independent digital production studio — web, design, publishing &amp; AI.</p>
+  <div class="f-links">
+    <a href="index.html">Home</a>
+    <a href="works.html">Works</a>
+    <a href="ai.html">NOWNET AI</a>
+    <a href="feedback.html">Feedback</a>
+    <a href="https://t.me/NOWNETOFFICIAL" target="_blank" rel="noopener">Telegram</a>
+    <a href="https://janitorai.com/profiles/eff6ac94-8b0b-4968-8f1f-2b58580947f5_profile-of-nownet" target="_blank" rel="noopener">Janitor AI</a>
+    <a href="https://character.ai/profile/NOWNET_CAI" target="_blank" rel="noopener">Character AI</a>
+  </div>
+  <p>Contact: <a href="mailto:nownetofficial@gmail.com">nownetofficial@gmail.com</a> · © 2026 NOWNET Production. All rights reserved.</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
