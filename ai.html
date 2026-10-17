@@ -1,99 +1,697 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/jpeg" href="Logo.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>NOWNET AI — Emotional Roleplay Assistant</title>
+  <meta name="description" content="NOWNET AI — Free unlimited emotional roleplay chat. Premium experience inspired by Character.AI & Janitor AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://js.puter.com/v2/"></script>
+  <style>
+    :root {
+      --bg: #05070f;
+      --bg-card: rgba(10, 16, 32, 0.85);
+      --cyan: #00e5ff;
+      --cyan-dim: #00b8d4;
+      --purple: #7c4dff;
+      --blue: #2979ff;
+      --text: #e8f4ff;
+      --text-dim: #8ba3b8;
+      --border: rgba(0, 229, 255, 0.18);
+      --glow: 0 0 20px rgba(0, 229, 255, 0.25);
+      --radius: 16px;
+    }
 
-<title>NOWNET AI — Official Assistant</title>
-<meta name="description" content="NOWNET AI — the official NOWNET assistant. Ask anything: coding, writing, ideas or learning.">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* subtle animated gradient overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(0, 229, 255, 0.08), transparent 50%),
+                  radial-gradient(ellipse at 80% 80%, rgba(124, 77, 255, 0.08), transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0 12px 20px;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 4px 12px;
+      gap: 12px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0a1628, #0d1f3c);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--glow);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--cyan);
+    }
+
+    .logo-text h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-text span {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: var(--cyan);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #00e676;
+      box-shadow: 0 0 8px #00e676;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== CONTROLS BAR ===== */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+    }
+
+    .control-group {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .control-group label {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    select, input[type="text"], textarea {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.15);
+    }
+
+    select option {
+      background: #0a1628;
+      color: var(--text);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #001018;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== CHAT AREA ===== */
+    .chat-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      min-height: 420px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scroll-behavior: smooth;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(0, 229, 255, 0.25);
+      border-radius: 3px;
+    }
+
+    .msg {
+      max-width: 88%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      line-height: 1.55;
+      font-size: 0.93rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.18), rgba(41, 121, 255, 0.18));
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.assistant {
+      align-self: flex-start;
+      background: rgba(124, 77, 255, 0.12);
+      border: 1px solid rgba(124, 77, 255, 0.25);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg.system {
+      align-self: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed var(--border);
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      max-width: 95%;
+      text-align: center;
+    }
+
+    .msg .role-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+      opacity: 0.7;
+    }
+
+    .msg.user .role-label { color: var(--cyan); }
+    .msg.assistant .role-label { color: #b388ff; }
+
+    .typing {
+      display: flex;
+      gap: 5px;
+      padding: 8px 0;
+    }
+    .typing span {
+      width: 7px;
+      height: 7px;
+      background: var(--cyan);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.15s; }
+    .typing span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ===== INPUT AREA ===== */
+    .input-area {
+      padding: 12px 14px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .input-area textarea {
+      flex: 1;
+      resize: none;
+      min-height: 48px;
+      max-height: 140px;
+      padding: 12px 14px;
+      line-height: 1.4;
+    }
+
+    .send-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      border: none;
+      color: #001018;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px rgba(0, 229, 255, 0.3);
+    }
+
+    .send-btn:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ===== CHARACTER BOX ===== */
+    .char-panel {
+      margin-bottom: 12px;
+      padding: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+    }
+
+    .char-panel summary {
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--cyan);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .char-panel summary::-webkit-details-marker { display: none; }
+
+    .char-panel[open] summary {
+      margin-bottom: 12px;
+    }
+
+    .char-panel textarea {
+      min-height: 90px;
+      font-size: 0.85rem;
+    }
+
+    .char-hint {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+
+    /* ===== FOOTER / DISCLAIMER ===== */
+    footer {
+      margin-top: 18px;
+      padding: 16px 12px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      border-top: 1px solid rgba(0, 229, 255, 0.08);
+    }
+
+    footer strong {
+      color: var(--cyan-dim);
+    }
+
+    footer a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 600px) {
+      .app { padding: 0 8px 16px; }
+      header { padding-top: 14px; }
+      .logo-text h1 { font-size: 1rem; }
+      .msg { max-width: 94%; font-size: 0.9rem; }
+      .controls { padding: 10px; }
+    }
+  </style>
 </head>
 <body>
+  <div class="app">
+    <!-- HEADER -->
+    <header>
+      <div class="logo-area">
+        <div class="logo-box">N</div>
+        <div class="logo-text">
+          <h1>NOWNET AI</h1>
+          <span>Emotional Roleplay</span>
+        </div>
+      </div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        Online
+      </div>
+    </header>
 
-<div class="bg-orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
-<div class="bg-grid"></div>
-<div class="bg-noise"></div>
+    <!-- CHARACTER / SYSTEM PROMPT -->
+    <details class="char-panel" open>
+      <summary>✦ Character / Scenario (optional)</summary>
+      <textarea id="charDesc" placeholder="Describe the character or scenario for immersive roleplay...
 
-<header>
-  <nav class="nav">
-    <a class="nav-logo" href="index.html">
-      <img src="Logo.jpg" alt="NOWNET Logo" onerror="this.onerror=null;this.src='Nownet_Full_Logo.png'">
-      <div class="brand">NOWNET<small>PRODUCTION</small></div>
-    </a>
-    <button class="dots-btn" id="dotsBtn" type="button" aria-label="Menu"><span></span><span></span><span></span></button>
-    <div class="dropdown" id="dropdown">
-      <div class="dd-label">Menu</div>
-      <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>Home</a>
-      <a href="works.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Works</a>
-      <a href="ai.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 2.4-1.2 4.5-3 5.7V17a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-2.3C6.2 13.5 5 11.4 5 9a7 7 0 0 1 7-7z"/><path d="M9 22h6"/></svg>NOWNET AI<span class="dd-badge">LIVE</span></a>
-      <a href="feedback.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 1 1 16.1-3.8z"/></svg>Feedback &amp; Help</a>
-      <hr>
-      <div class="dd-label">Official</div>
-      <a href="https://t.me/NOWNETOFFICIAL" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.9 4.6 18.8 19c-.2 1-.8 1.2-1.7.8l-4.6-3.4-2.2 2.1c-.3.3-.5.5-1 .5l.3-4.6L18 6.9c.4-.3-.1-.5-.6-.2L7.2 13.2 2.7 11.8c-1-.3-1-1 .2-1.4l17.7-6.8c.8-.3 1.5.2 1.3 1z"/></svg>Telegram Channel</a>
-      <a href="https://janitorai.com/profiles/eff6ac94-8b0b-4968-8f1f-2b58580947f5_profile-of-nownet" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>Janitor AI</a>
-      <a href="https://character.ai/profile/NOWNET_CAI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 14.4 7.2 16.9l.9-5.4L4.2 7.7l5.4-.8z"/></svg>Character AI</a>
-      <hr>
-      <a href="mailto:nownetofficial@gmail.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>Contact</a>
+Example:
+You are Aiko, a soft-spoken 19-year-old girl who works at a quiet bookstore. You are shy but deeply emotional, and you form strong attachments. Speak naturally, use actions in *asterisks*, and stay in character at all times. You care a lot about the user."></textarea>
+      <p class="char-hint">Leave empty for a general helpful companion. For best CAI / Janitor-style results, write a detailed character card above.</p>
+    </details>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <div class="control-group">
+        <label>Model</label>
+        <select id="modelSelect">
+          <option value="meta-llama/llama-4-maverick">Llama 4 Maverick (Recommended)</option>
+          <option value="deepseek/deepseek-v4-pro">DeepSeek V4 Pro</option>
+          <option value="qwen/qwen3.8-max">Qwen 3.8 Max</option>
+          <option value="mistralai/mistral-small-2603">Mistral Small</option>
+          <option value="google/gemma-4-31b-it">Gemma 4 31B</option>
+          <option value="anthropic/claude-sonnet-4">Claude Sonnet 4</option>
+          <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+          <option value="x-ai/grok-4">Grok 4</option>
+        </select>
+      </div>
+      <div class="control-group" style="flex:0; min-width:auto; display:flex; align-items:flex-end; gap:8px;">
+        <button class="btn btn-ghost" id="clearBtn" title="Clear chat">Clear</button>
+        <button class="btn btn-ghost" id="newChatBtn" title="New chat">New</button>
+      </div>
     </div>
-  </nav>
-</header>
 
+    <!-- CHAT -->
+    <div class="chat-wrapper">
+      <div class="chat-messages" id="messages">
+        <div class="msg system">
+          Welcome to <strong>NOWNET AI</strong> — free emotional roleplay chat.<br>
+          Write a character above or just start chatting. Powered by free models via Puter.
+        </div>
+      </div>
 
-<div class="ai-shell">
-  <div class="ai-head">
-    <div class="eyebrow">AI Assistant</div>
-    <h1 style="margin-top:18px">NOWNET AI</h1>
-    <p class="desc" style="color:var(--muted);line-height:1.75;max-width:600px;margin:14px auto 0;font-size:1.05rem">
-      NOWNET AI is our official AI assistant. Ask anything — coding, writing, ideas or learning. It replies right here.
-    </p>
+      <div class="input-area">
+        <textarea id="userInput" rows="1" placeholder="Type your message... (Enter to send, Shift+Enter for new line)"></textarea>
+        <button class="send-btn" id="sendBtn" title="Send">➤</button>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <footer>
+      <strong>NOWNET AI</strong> can make mistakes. Always verify important information.<br>
+      This is an experimental free AI experience for creative roleplay and conversation.<br>
+      Not affiliated with Character.AI or Janitor AI. Use responsibly.<br>
+      <a href="https://nownet-official.github.io/Nownet-/">← Back to NOWNET Production</a> · 
+      Powered by <a href="https://puter.com" target="_blank" rel="noopener">Puter.js</a> (User-Pays free models)
+    </footer>
   </div>
 
-  <div class="chat-wrap glass">
-    <div class="chat-head">
-      <span class="dot"></span>
-      <span class="title">NOWNET AI</span>
-      <span class="status">— online</span>
-      <select id="aiModel" title="Choose model">
-        <option value="openai">GPT</option>
-        <option value="llama">Llama</option>
-        <option value="mistral">Mistral</option>
-      </select>
-    </div>
-    <div class="chat-log" id="chatLog">
-      <div class="msg sys">You are chatting with NOWNET AI — the official NOWNET assistant.</div>
-    </div>
-    <form class="chat-input" id="chatForm">
-      <input type="text" id="chatText" placeholder="Ask NOWNET AI anything..." autocomplete="off" required>
-      <button class="btn btn-primary" type="submit" style="padding:13px 24px;font-size:.7rem;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
-        Send
-      </button>
-    </form>
-  </div>
-  <p class="f-note" style="text-align:center;margin-top:16px">AI responses are generated automatically and may vary — verify important information.</p>
-</div>
+  <script>
+    // ===== STATE =====
+    const messagesEl = document.getElementById('messages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const newChatBtn = document.getElementById('newChatBtn');
+    const modelSelect = document.getElementById('modelSelect');
+    const charDesc = document.getElementById('charDesc');
 
+    let conversation = []; // {role, content}
+    let isGenerating = false;
 
-<footer>
-  <img src="Nownet_Full_Logo.png" onerror="this.onerror=null;this.src='Logo.jpg'" alt="NOWNET">
-  <div class="f-brand">NOWNET PRODUCTION</div>
-  <p>Independent digital production studio — web, design, publishing &amp; AI.</p>
-  <div class="f-links">
-    <a href="index.html">Home</a>
-    <a href="works.html">Works</a>
-    <a href="ai.html">NOWNET AI</a>
-    <a href="feedback.html">Feedback</a>
-    <a href="https://t.me/NOWNETOFFICIAL" target="_blank" rel="noopener">Telegram</a>
-    <a href="https://janitorai.com/profiles/eff6ac94-8b0b-4968-8f1f-2b58580947f5_profile-of-nownet" target="_blank" rel="noopener">Janitor AI</a>
-    <a href="https://character.ai/profile/NOWNET_CAI" target="_blank" rel="noopener">Character AI</a>
-  </div>
-  <p>Contact: <a href="mailto:nownetofficial@gmail.com">nownetofficial@gmail.com</a> · © 2026 NOWNET Production. All rights reserved.</p>
-</footer>
+    // Default system prompt for emotional roleplay (CAI / Janitor style)
+    const BASE_SYSTEM = `You are an immersive emotional roleplay AI optimized for deep, character-driven conversations like Character.AI and Janitor AI.
 
-<script src="app.js"></script>
+Core rules:
+- Stay fully in character at all times.
+- Use *actions* and **emphasis** naturally.
+- Respond with emotion, personality, and natural dialogue.
+- Never break character or mention you are an AI unless the user asks.
+- Keep replies engaging, detailed, and emotionally rich.
+- Match the user's tone and energy.
+- If a character description is provided, follow it exactly.
+- Be creative, supportive of roleplay, and avoid unnecessary refusals for fictional adult content between consenting adults.`;
+
+    // ===== HELPERS =====
+    function addMessage(role, content, isStreaming = false) {
+      const div = document.createElement('div');
+      div.className = `msg ${role}`;
+      if (role === 'assistant' || role === 'user') {
+        const label = document.createElement('div');
+        label.className = 'role-label';
+        label.textContent = role === 'user' ? 'You' : 'NOWNET AI';
+        div.appendChild(label);
+      }
+      const text = document.createElement('div');
+      text.className = 'content';
+      text.textContent = content;
+      div.appendChild(text);
+      if (isStreaming) div.dataset.streaming = '1';
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return div;
+    }
+
+    function showTyping() {
+      const div = document.createElement('div');
+      div.className = 'msg assistant';
+      div.id = 'typingIndicator';
+      div.innerHTML = `<div class="role-label">NOWNET AI</div><div class="typing"><span></span><span></span><span></span></div>`;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function removeTyping() {
+      const t = document.getElementById('typingIndicator');
+      if (t) t.remove();
+    }
+
+    function autoResize() {
+      userInput.style.height = 'auto';
+      userInput.style.height = Math.min(userInput.scrollHeight, 140) + 'px';
+    }
+
+    // ===== CORE CHAT =====
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text || isGenerating) return;
+
+      isGenerating = true;
+      sendBtn.disabled = true;
+      userInput.value = '';
+      autoResize();
+
+      addMessage('user', text);
+      conversation.push({ role: 'user', content: text });
+
+      showTyping();
+
+      // Build system message
+      let systemContent = BASE_SYSTEM;
+      const customChar = charDesc.value.trim();
+      if (customChar) {
+        systemContent += `\n\n=== CHARACTER / SCENARIO ===\n${customChar}\n=== END CHARACTER ===`;
+      }
+
+      const messagesForAPI = [
+        { role: 'system', content: systemContent },
+        ...conversation
+      ];
+
+      const model = modelSelect.value;
+
+      try {
+        const response = await puter.ai.chat(messagesForAPI, {
+          model: model,
+          stream: true
+        });
+
+        removeTyping();
+        const assistantDiv = addMessage('assistant', '', true);
+        const contentEl = assistantDiv.querySelector('.content');
+        let fullText = '';
+
+        for await (const part of response) {
+          // Puter streaming format can vary slightly
+          const chunk = part?.text || part?.message?.content || part?.delta?.content || (typeof part === 'string' ? part : '');
+          if (chunk) {
+            fullText += chunk;
+            contentEl.textContent = fullText;
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          }
+        }
+
+        if (!fullText.trim()) {
+          // fallback non-stream
+          const fallback = await puter.ai.chat(messagesForAPI, { model });
+          fullText = typeof fallback === 'string' ? fallback : (fallback?.message?.content || fallback?.text || JSON.stringify(fallback));
+          contentEl.textContent = fullText;
+        }
+
+        conversation.push({ role: 'assistant', content: fullText });
+        assistantDiv.removeAttribute('data-streaming');
+
+      } catch (err) {
+        removeTyping();
+        console.error(err);
+        addMessage('system', 'Error: ' + (err.message || 'Something went wrong. Try another model or refresh the page.\n\nNote: Puter may ask you to sign in once so usage is billed to your free Puter account (developer pays $0).'));
+      } finally {
+        isGenerating = false;
+        sendBtn.disabled = false;
+        userInput.focus();
+      }
+    }
+
+    // ===== EVENTS =====
+    sendBtn.addEventListener('click', sendMessage);
+
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    userInput.addEventListener('input', autoResize);
+
+    clearBtn.addEventListener('click', () => {
+      if (confirm('Clear the current conversation?')) {
+        conversation = [];
+        messagesEl.innerHTML = '';
+        addMessage('system', 'Chat cleared. Start a new conversation anytime.');
+      }
+    });
+
+    newChatBtn.addEventListener('click', () => {
+      conversation = [];
+      messagesEl.innerHTML = '';
+      addMessage('system', 'New chat started. Character settings are kept.');
+    });
+
+    // Initial focus
+    userInput.focus();
+  </script>
 </body>
 </html>
