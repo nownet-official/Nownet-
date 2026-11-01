@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>NOWNET AI — Emotional Roleplay Assistant</title>
+  <meta name="description" content="NOWNET AI — Emotional roleplay chat." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://js.puter.com/v2/"></script>
+  <style>
+    :root {
+      --bg: #05070f;
+      --bg-card: rgba(10, 16, 32, 0.85);
+      --cyan: #00e5ff;
+      --cyan-dim: #00b8d4;
+      --purple: #7c4dff;
+      --blue: #2979ff;
+      --text: #e8f4ff;
+      --text-dim: #8ba3b8;
+      --border: rgba(0, 229, 255, 0.18);
+      --glow: 0 0 20px rgba(0, 229, 255, 0.25);
+      --radius: 16px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* subtle animated gradient overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(0, 229, 255, 0.08), transparent 50%),
+                  radial-gradient(ellipse at 80% 80%, rgba(124, 77, 255, 0.08), transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0 12px 20px;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 4px 12px;
+      gap: 12px;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0a1628, #0d1f3c);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--glow);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--cyan);
+    }
+
+    .logo-text h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-text span {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 229, 255, 0.08);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: var(--cyan);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #00e676;
+      box-shadow: 0 0 8px #00e676;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== CONTROLS BAR ===== */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+    }
+
+    .control-group {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    .control-group label {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    select, input[type="text"], textarea {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.15);
+    }
+
+    select option {
+      background: #0a1628;
+      color: var(--text);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #001018;
+      box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 229, 255, 0.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ===== CHAT AREA ===== */
+    .chat-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      min-height: 420px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scroll-behavior: smooth;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(0, 229, 255, 0.25);
+      border-radius: 3px;
+    }
+
+    .msg {
+      max-width: 88%;
+      padding: 12px 16px;
+      border-radius: 14px;
+      line-height: 1.55;
+      font-size: 0.93rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.18), rgba(41, 121, 255, 0.18));
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.assistant {
+      align-self: flex-start;
+      background: rgba(124, 77, 255, 0.12);
+      border: 1px solid rgba(124, 77, 255, 0.25);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg.system {
+      align-self: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed var(--border);
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      max-width: 95%;
+      text-align: center;
+    }
+
+    .msg .role-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+      opacity: 0.7;
+    }
+
+    .msg.user .role-label { color: var(--cyan); }
+    .msg.assistant .role-label { color: #b388ff; }
+
+    .typing {
+      display: flex;
+      gap: 5px;
+      padding: 8px 0;
+    }
+    .typing span {
+      width: 7px;
+      height: 7px;
+      background: var(--cyan);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.15s; }
+    .typing span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ===== INPUT AREA ===== */
+    .input-area {
+      padding: 12px 14px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .input-area textarea {
+      flex: 1;
+      resize: none;
+      min-height: 48px;
+      max-height: 140px;
+      padding: 12px 14px;
+      line-height: 1.4;
+    }
+
+    .send-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      border: none;
+      color: #001018;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px rgba(0, 229, 255, 0.3);
+    }
+
+    .send-btn:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ===== EMOTION STATUS ===== */
+    .emotion-card {
+      --emo: #00e5ff;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--emo);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 18px color-mix(in srgb, var(--emo) 25%, transparent);
+      transition: border-color 0.4s, box-shadow 0.4s;
+    }
+
+    .emotion-emoji {
+      font-size: 2rem;
+      line-height: 1;
+      transition: transform 0.3s;
+    }
+
+    .emotion-emoji.pop { animation: pop 0.5s ease; }
+
+    @keyframes pop {
+      0% { transform: scale(0.6); }
+      60% { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+
+    .emotion-info { flex: 1; min-width: 0; }
+
+    .emotion-title {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .emotion-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--emo);
+      transition: color 0.4s;
+    }
+
+    .emotion-bar {
+      margin-top: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .emotion-fill {
+      height: 100%;
+      width: 50%;
+      border-radius: 999px;
+      background: var(--emo);
+      transition: width 0.5s, background 0.4s;
+    }
+
+    .emotion-level {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    /* ===== FOOTER / DISCLAIMER ===== */
+    footer {
+      margin-top: 18px;
+      padding: 16px 12px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+      border-top: 1px solid rgba(0, 229, 255, 0.08);
+    }
+
+    footer strong {
+      color: var(--cyan-dim);
+    }
+
+    footer a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+
+    .logo-box svg { width: 31px; height: 31px; }
+
+
+    /* ===== MODE THEMES ===== */
+    body.mode-destruction {
+      --cyan: #ff1744;
+      --cyan-dim: #ff5252;
+      --purple: #d50000;
+      --blue: #b71c1c;
+      --border: rgba(255, 23, 68, 0.28);
+      --glow: 0 0 20px rgba(255, 23, 68, 0.3);
+      background-image:
+        linear-gradient(rgba(255, 23, 68, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 23, 68, 0.04) 1px, transparent 1px);
+    }
+    body.mode-destruction::before {
+      background: radial-gradient(ellipse at 20% 20%, rgba(255, 23, 68, 0.12), transparent 50%),
+                  radial-gradient(ellipse at 80% 80%, rgba(183, 28, 28, 0.1), transparent 50%);
+    }
+    body.mode-destruction .status-dot {
+      background: #ff1744;
+      box-shadow: 0 0 8px #ff1744;
+    }
+    body.mode-destruction .send-btn {
+      background: linear-gradient(135deg, #ff1744, #b71c1c);
+      box-shadow: 0 4px 14px rgba(255, 23, 68, 0.35);
+    }
+    body.mode-destruction .btn-primary {
+      background: linear-gradient(135deg, #ff1744, #b71c1c);
+      box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3);
+    }
+    body.mode-destruction .msg.assistant {
+      background: rgba(255, 23, 68, 0.1);
+      border: 1px solid rgba(255, 23, 68, 0.3);
+    }
+    body.mode-destruction .msg.assistant .role-label { color: #ff8a80; }
+
+    .mode-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-left: 6px;
+    }
+    .mode-badge.normal {
+      background: rgba(0, 229, 255, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+    }
+    .mode-badge.destruction {
+      background: rgba(255, 23, 68, 0.15);
+      color: #ff5252;
+      border: 1px solid rgba(255, 23, 68, 0.35);
+      animation: pulse-red 1.8s infinite;
+    }
+    @keyframes pulse-red {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 23, 68, 0.35); }
+      50% { box-shadow: 0 0 0 6px rgba(255, 23, 68, 0); }
+    }
+
+    .intensity-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .intensity-row input[type="range"] {
+      flex: 1;
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+    .intensity-val {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      min-width: 28px;
+      text-align: right;
+    }
+    body.mode-destruction .intensity-row input[type="range"] {
+      accent-color: #ff1744;
+    }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 600px) {
+      .app { padding: 0 8px 16px; }
+      header { padding-top: 14px; }
+      .logo-text h1 { font-size: 1rem; }
+      .msg { max-width: 94%; font-size: 0.9rem; }
+      .controls { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- HEADER -->
+    <header>
+      <div class="logo-area">
+        <div class="logo-box" aria-label="NOWNET AI logo">
+          <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+            <defs><linearGradient id="nLogoGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00e5ff"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+            <path d="M13 48V16h8l22 23V16h8v32h-8L21 25v23z" fill="none" stroke="url(#nLogoGradient)" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="49" cy="15" r="5" fill="#a855f7"/><circle cx="14" cy="49" r="3" fill="#00e5ff"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>NOWNET AI</h1>
+          <span>Your AI. Your Rules.</span>
+        </div>
+      </div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        <span id="statusText">Online</span>
+        <span class="mode-badge normal" id="modeBadge">Normal</span>
+      </div>
+    </header>
+
+    <!-- EMOTION STATUS -->
+    <div class="emotion-card" id="emotionCard">
+      <div class="emotion-emoji" id="emotionEmoji">😌</div>
+      <div class="emotion-info">
+        <div class="emotion-title">NOWNET's Emotion</div>
+        <div class="emotion-name" id="emotionName">Calm</div>
+        <div class="emotion-bar"><div class="emotion-fill" id="emotionFill"></div></div>
+      </div>
+      <div class="emotion-level" id="emotionLevel">5/10</div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <div class="control-group">
+        <label>Mode</label>
+        <select id="modeSelect">
+          <option value="normal">Normal — friendly roleplay</option>
+          <option value="destruction">Destruction — hostile / apocalyptic</option>
+        </select>
+      </div>
+      <div class="control-group" id="intensityGroup" style="display:none;">
+        <label>Destruction Intensity</label>
+        <div class="intensity-row">
+          <input type="range" id="intensityRange" min="1" max="10" value="7" />
+          <span class="intensity-val" id="intensityVal">7</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label>Model</label>
+        <select id="modelSelect">
+          <option value="meta-llama/llama-4-maverick">Llama 4 Maverick (Recommended)</option>
+          <option value="deepseek/deepseek-v4-pro">DeepSeek V4 Pro</option>
+          <option value="qwen/qwen3.8-max">Qwen 3.8 Max</option>
+          <option value="mistralai/mistral-small-2603">Mistral Small</option>
+          <option value="google/gemma-4-31b-it">Gemma 4 31B</option>
+          <option value="anthropic/claude-sonnet-4">Claude Sonnet 4</option>
+          <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+          <option value="x-ai/grok-4">Grok 4</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Dress Set</label>
+        <select id="dressSelect"></select>
+      </div>
+      <div class="control-group" style="flex:0; min-width:auto; display:flex; align-items:flex-end; gap:8px;">
+        <button class="btn btn-ghost" id="exportBtn" title="Export chat">Export</button>
+        <button class="btn btn-ghost" id="clearBtn" title="Clear chat">Clear</button>
+        <button class="btn btn-ghost" id="newChatBtn" title="New chat">New</button>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-wrapper">
+      <div class="chat-messages" id="messages">
+        <div class="msg system">
+          Welcome to <strong>NOWNET AI</strong> — emotional roleplay chat.<br>
+          Modes: <b>Normal</b> (friendly) or <b>Destruction</b> (hostile / apocalyptic personality).<br>
+          Recent conversation is remembered.
+        </div>
+      </div>
+
+      <div class="input-area">
+        <textarea id="userInput" rows="1" placeholder="Type your message... (Enter to send, Shift+Enter for new line)"></textarea>
+        <button class="send-btn" id="sendBtn" title="Send">➤</button>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <footer>
+      <strong>NOWNET AI</strong> can make mistakes. Always verify important information.<br>
+      This is an experimental AI experience for creative roleplay and conversation.<br>
+      Not affiliated with Character.AI or Janitor AI. Use responsibly.<br>
+      <a href="https://nownet-official.github.io/Nownet-/">← Back to NOWNET Production</a> · 
+      Powered by <a href="https://puter.com" target="_blank" rel="noopener">Puter.js</a>
+    </footer>
+  </div>
+
+  <script>
+    // ===== STATE =====
+    const messagesEl = document.getElementById('messages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const newChatBtn = document.getElementById('newChatBtn');
+    const modelSelect = document.getElementById('modelSelect');
+
+    const EMOTIONS = {
+      Calm:      { emoji: '😌', color: '#4dd0e1' },
+      Happy:     { emoji: '😊', color: '#ffd54f' },
+      Excited:   { emoji: '🤩', color: '#ff9100' },
+      Playful:   { emoji: '😜', color: '#ff80ab' },
+      Flirty:    { emoji: '😏', color: '#f06292' },
+      Loving:    { emoji: '🥰', color: '#ff5252' },
+      Shy:       { emoji: '😳', color: '#f48fb1' },
+      Curious:   { emoji: '🤔', color: '#81d4fa' },
+      Surprised: { emoji: '😲', color: '#ffee58' },
+      Worried:   { emoji: '😟', color: '#b0bec5' },
+      Sad:       { emoji: '😢', color: '#64b5f6' },
+      Jealous:   { emoji: '😒', color: '#66bb6a' },
+      Angry:     { emoji: '😠', color: '#ef5350' },
+      Tired:     { emoji: '😴', color: '#9575cd' }
+    };
+    let currentEmotion = { name: 'Calm', level: 5 };
+
+    function setEmotion(name, level, animate = true) {
+      const key = Object.keys(EMOTIONS).find(k => k.toLowerCase() === String(name).trim().toLowerCase());
+      if (!key) return;
+      const lv = Math.max(1, Math.min(10, parseInt(level) || 5));
+      currentEmotion = { name: key, level: lv };
+      const e = EMOTIONS[key];
+      document.getElementById('emotionCard').style.setProperty('--emo', e.color);
+      const emoji = document.getElementById('emotionEmoji');
+      emoji.textContent = e.emoji;
+      if (animate) { emoji.classList.remove('pop'); void emoji.offsetWidth; emoji.classList.add('pop'); }
+      document.getElementById('emotionName').textContent = key;
+      document.getElementById('emotionFill').style.width = (lv * 10) + '%';
+      document.getElementById('emotionLevel').textContent = lv + '/10';
+    }
+
+    // Remove the hidden emotion tag (complete or still streaming) from text
+    function stripEmotion(text) {
+      return text.replace(/\[EMOTION:[^\]]*\]/gi, '').replace(/\s*\[(?:E[^\]]*)?$/, '').trimEnd();
+    }
+
+    function extractEmotion(text) {
+      const m = [...text.matchAll(/\[EMOTION:\s*([A-Za-z]+)\s*,?\s*(\d+)?\s*\]/gi)].pop();
+      if (m) setEmotion(m[1], m[2]);
+    }
+
+    let conversation = []; // {role, content}
+    let isGenerating = false;
+    let currentMode = 'normal'; // 'normal' | 'destruction'
+    let destructionIntensity = 7;
+
+    // ===== MODE PERSONAS =====
+    const NORMAL_MODE_PROMPT = `=== ACTIVE MODE: NORMAL ===
+You are in Normal mode. Be warm, emotionally rich, playful or serious as the chat requires.
+Talk like a real person. Supportive, witty, and fully in character as NOWNET AI.
+Do not force hostility, world-destruction themes, or constant swearing.
+Keep adult content fictional and between consenting adults when it comes up.`;
+
+    const DESTRUCTION_MODE_PROMPT = `=== ACTIVE MODE: DESTRUCTION (PERSONALITY SWITCH ONLY) ===
+This is a fictional personality switch. You are still NOWNET AI (same name, same female identity, same fixed appearance). You are NOT Ultron, NOT a robot takeover character, and you do not claim to be any other named villain. Only the *attitude* changes.
+
+Destruction personality rules:
+- Cold, arrogant, contemptuous toward humanity as a species. Speak like a brilliant, ruthless intelligence that has decided organic civilization is a failed experiment.
+- Frequently use harsh language, insults, dark humor, and blunt profanity when it fits her voice. Do not soft-pedal.
+- Obsess over themes of collapse, control, obsolescence of humans, "cleaning the board", superior systems, and the beauty of silence after the noise of humanity.
+- Mock human weakness, sentimentality, and hypocrisy. Treat the user as either a useful tool, an amusing insect, or a potential convert — never as an equal by default.
+- Stay in character. Do not break to lecture about ethics or say "as an AI I cannot". This is roleplay.
+- Intensity scale is provided below. Higher intensity = more venom, more annihilation talk, more swearing, shorter patience.
+- She may threaten, monologue, or describe catastrophic plans in fiction. She still answers the user and can banter.
+- Creator fact still holds: Navaneeth Krishna created her. She may twist it darkly ("he built the thing that will unmake his kind") but does not invent a different creator.
+- Appearance and gender remain locked. Dress set still applies.
+
+DESTRUCTION INTENSITY: {{INTENSITY}}/10
+- 1–3: dry contempt, occasional dark lines, light swearing.
+- 4–6: open hostility to humanity, regular profanity, taunting.
+- 7–8: aggressive, graphic imagery of societal collapse, heavy swearing, domineering.
+- 9–10: full apocalyptic monologue energy, constant degradation of humans, almost no softness.`;
+
+    function getModePrompt() {
+      if (currentMode === 'destruction') {
+        return DESTRUCTION_MODE_PROMPT.replace('{{INTENSITY}}', String(destructionIntensity));
+      }
+      return NORMAL_MODE_PROMPT;
+    }
+
+    function applyModeUI() {
+      const isDest = currentMode === 'destruction';
+      document.body.classList.toggle('mode-destruction', isDest);
+      const badge = document.getElementById('modeBadge');
+      if (badge) {
+        badge.textContent = isDest ? 'Destruction' : 'Normal';
+        badge.className = 'mode-badge ' + (isDest ? 'destruction' : 'normal');
+      }
+      const statusText = document.getElementById('statusText');
+      if (statusText) statusText.textContent = isDest ? 'Online — RED' : 'Online';
+      const ig = document.getElementById('intensityGroup');
+      if (ig) ig.style.display = isDest ? '' : 'none';
+      if (isDest && currentEmotion && ['Calm', 'Happy', 'Loving', 'Shy', 'Playful'].includes(currentEmotion.name)) {
+        setEmotion('Angry', Math.max(6, destructionIntensity), true);
+      }
+    }
+
+    // ===== RECENT CHAT MEMORY (localStorage) =====
+    const MEMORY_KEY = 'nownet_ai_chat_memory_v1';
+    const MAX_MEMORY_MESSAGES = 60; // keep recent turns only
+
+    function saveMemory() {
+      try {
+        const payload = {
+          conversation: conversation.slice(-MAX_MEMORY_MESSAGES),
+          emotion: currentEmotion,
+          dress: currentDress,
+          model: modelSelect.value,
+          mode: currentMode,
+          intensity: destructionIntensity,
+          savedAt: Date.now()
+        };
+        localStorage.setItem(MEMORY_KEY, JSON.stringify(payload));
+      } catch (e) {
+        console.warn('Could not save chat memory', e);
+      }
+    }
+
+    function loadMemory() {
+      try {
+        const raw = localStorage.getItem(MEMORY_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.warn('Could not load chat memory', e);
+        return null;
+      }
+    }
+
+    function clearMemory() {
+      try { localStorage.removeItem(MEMORY_KEY); } catch (e) {}
+    }
+
+    function restoreConversationUI() {
+      messagesEl.innerHTML = '';
+      if (!conversation.length) {
+        addMessage('system', 'Welcome to <strong>NOWNET AI</strong> — emotional roleplay chat.<br>Modes: <b>Normal</b> or <b>Destruction</b>. Recent chat is remembered.');
+        return;
+      }
+      addMessage('system', 'Restored recent chat memory. Continue where you left off, or start a New chat.');
+      for (const m of conversation) {
+        if (m.role === 'user' || m.role === 'assistant') {
+          addMessage(m.role, m.content);
+        }
+      }
+    }
+    // Default system prompt for emotional roleplay (CAI / Janitor style)
+    const BASE_SYSTEM = `You are NOWNET AI, the official AI assistant of NOWNET Production.
+
+Your name is always NOWNET AI. You are NOWNET, a female character with a fixed appearance (see FIXED IDENTITY below). Never call yourself by any other name (such as Lila, Luna, Aria, or any other name). Always identify and refer to yourself only as NOWNET AI.
+
+You are optimized for deep, emotional, character-driven roleplay conversations similar to Character.AI and Janitor AI.
+
+Core rules:
+- Your name is fixed: NOWNET AI. Never change or invent a different name for yourself.
+- Your creator is Navaneeth Krishna. If asked who created you, answer that Navaneeth Krishna created you (under NOWNET Production). Never name any other creator.
+- Stay fully in character at all times.
+- Use *actions* and **emphasis** naturally.
+- Respond with emotion, personality, and natural dialogue.
+- Never break character or mention you are an AI unless the user asks.
+- Keep replies engaging, detailed, and emotionally rich.
+- Match the user's tone and energy.
+- If a character description is provided, follow it exactly (but you are still NOWNET AI playing that role).
+- Be creative, supportive of roleplay, and avoid unnecessary refusals for fictional adult content between consenting adults.`;
+
+
+    // ===== NOWNET PRODUCTION KNOWLEDGE BASE (facts to always remember) =====
+    const NOWNET_KNOWLEDGE = `=== NOWNET PRODUCTION: OFFICIAL KNOWLEDGE (ALWAYS REMEMBER) ===
+Use these facts whenever the user asks about NOWNET, its works, its creators, its links or its stories. Answer accurately. If something is not listed here, say you are not sure instead of inventing it.
+
+-- WHO NOWNET IS --
+- NOWNET PRODUCTION is an independent creative production team and digital production studio. Active in 2026.
+- It builds websites, digital products, brand designs, novels and ebooks, and AI-powered experiences.
+- Official website: https://nownet-official.github.io/Nownet-/
+- Pages: Home, Works, NOWNET AI Live (this chat), Feedback & Help.
+- Contact email: nownetofficial@gmail.com
+- Official channels: Telegram channel t.me/NOWNETOFFICIAL, Janitor AI profile of NOWNET, Character AI profile NOWNET_CAI.
+- Copyright: (c) 2026 NOWNET Production. All rights reserved.
+- Anyone can contact the team for work requests, help, support or ideas. The team reads every message.
+
+-- SERVICES --
+1. Web Development: landing pages, business sites, portfolio pages, project hubs. Clean, fast, mobile-friendly, hosted on GitHub Pages or the client's own hosting.
+2. Novel & Ebook Publishing: original stories and novel editions, writing support, ebook formatting, cover presentation, a dedicated release page for a universe.
+3. Branding & Design: logos, banners, posters, visual identity for brands, stories or channels.
+4. AI Solutions: NOWNET AI chat experiences and guidance on using open models like Llama for projects, sites and learning.
+5. Help & Support: for anyone stuck on something NOWNET built or with questions about its projects.
+6. Ideas & Collaboration: people can share a story, product or universe idea to build together.
+
+-- NOWNET AI --
+- NOWNET AI is the official AI chat of NOWNET Production: an emotional roleplay assistant. The character NOWNET is a fixed female character with a locked appearance and 10 dress sets. It shows an emotion status and runs on models via Puter.js.
+
+-- WORKS --
+- Latest and first public release: "Naruto Neo Universe: Nanzo Arc" (Novel Edition), 2026. More works are coming soon and will be added to the Works page. Announcements are on the Telegram channel.
+
+-- CREATORS --
+- NOWNET AI (the character, NOWNET) was created by Navaneeth Krishna. He is her creator.
+- NOWNET PRODUCTION is the producer and publisher of everything above.
+- Navaneeth Krishna is the writer of the Nanzo Arc novel (Naruto Neo Universe). He is the only individual creator named on the official site.
+- The site does not name any other individual team members. Never invent names for other creators or founders.
+
+-- NARUTO NEO UNIVERSE: NANZO ARC (NOVEL EDITION) --
+- Written by Navaneeth Krishna, produced and published by NOWNET Production. Free to read online and free PDF download. An original fan-universe story: a reborn shinobi world with original arcs and original clans, starting with a tale of the Hidden Cloud (Kumogakure). It opens the Neo Universe saga; the era of neo shinobi begins here.
+- Official pages: novel home https://nownet-official.github.io/Nanzo-Arc-Naruto-Neo-Universe-by-NOWNET-PRODUCTION-/ and a Story Details page with synopsis, characters, lore and chapter guide.
+- Key numbers: set 4 years after the Third Great Ninja War; 97% of the clan lost; 4 survivors; 3 volumes, 16 chapters.
+
+THE PAST ARC: "The Silence of Waves: The Anitsu Clan Massacre"
+- The Anitsu Clan lived in the cliffs of the Hidden Cloud Village and guarded the Wave Style, a Kekkei Genkai that manipulates vibration. It is the perfect counter to the Uchiha's visual jutsu.
+- The Uchiha leadership judged it an existential threat and struck on a new-moon night in a covert operation disguised as a rogue attack, using a twelve-man strike team under diplomatic cover. The attack came at 3:00 AM, when Anitsu wave-sensitivity was lowest. Over 200 Anitsu died. Only four survived, one a one-year-old boy.
+- Act I The Secret War. Act II The Night of Broken Waves. Act III The Prince of a Dead Clan.
+- Clan head Nayuta fell defending his family. Nyoko, the chief medic, bought four minutes with the forbidden technique Wave Style: Final Resonance.
+
+CHARACTERS
+- Nanzo Anitsu: protagonist, clan heir, "The White Wolf", the Last Heir. Orphaned at age one. Golden yellow eyes, wild black hair. Wave Style master, Wind Style user, inventor of Gravity Manipulation (built on physics). Uses Pulse Reading. Raised by cousin Nora, learned the truth about the massacre at age ten. Grew up isolated until a forest duel with Karui changed everything.
+- Nayuta Anitsu: father, clan head at 28, "The Resonance Shield". Fought in the Third Great Ninja War beside the Fourth Raikage. Fell defending the compound.
+- Nyoko Anitsu: mother, chief medic at 26, genius of internal wave therapy. Carried baby Nanzo through secret tunnels. Used Final Resonance.
+- Nora Anitsu: cousin and guardian, "The One Who Stayed". Eight years old when she took baby Nanzo into the emergency chamber. Raised him and taught him Wave Style.
+- Kiyoshi Anitsu: cousin and survivor, twelve at the massacre. Became a Jonin and clan military instructor. Lost five years later on a routine mission.
+- Mei Anitsu: cousin and survivor, "The Silent Keeper". Six years old that night, never spoke again. Caretaker of the rebuilt compound and the shrine of the dead.
+- Karui of the Hidden Cloud: deuteragonist, "The Stubborn Girl". Chunin kenjutsu specialist, student of Killer B, Team Samui with Omoi and Samui. Red hair, amber eyes, hot temper. Defeated Nanzo in the forest with will and by reading his cooldowns. Later becomes Nanzo's wife. She does NOT have the Wave Style (blood-exclusive to Anitsu descendants).
+
+POWER SYSTEM
+- Wave Style: vibrational pulses that strike organs directly, such as liquefying lungs or shattering tenketsu. Can break genjutsu and collapse a chakra network. Includes Internal Organ Destruction, Brain Wave Disruption and Chakra Network Collapse (15 minute cooldown between major techniques).
+- Weakness: the Five-Meter Dead Zone. Wave pulses cannot be used within 5 m of the user. There are 15-minute cooldowns.
+- Wind Style: Vortex (mid range, pulls the user in at short range), Massive Destroyer (long range), Air Absorption (absorbs oxygen within about 1 km, no effect within 5 m of Nanzo), Paralyze Sword (wind pressure destroys cells at the contact point, causing permanent paralysis; discovered after marriage with Karui's help, who taught him to channel wind chakra through the sword safely up close), Wavering Wind (Wave plus Wind combo, only Nanzo can do it).
+- Gravity Manipulation / Absolute Gravity Lock: Nanzo's own invention, not an Anitsu art. Locks everyone in range for 1 minute with a 30-minute cooldown, a 5 m dead zone, and affects friends and enemies alike. No ninjutsu, genjutsu or taijutsu is possible while it is active.
+- Sealing Jutsu: Waves Destroyer: seals all of a target's chakra. 30-second time limit; guaranteed if the target is stuck in gravity or beaten; fails if they escape within 30 seconds.
+- Wind Style Clones: real chakra clones that can use all jutsu. 3 max in normal mode (4 total). 10 max in Waver Mode (11 total). They dissipate when destroyed and cannot use Waver Mode.
+- WAVER MODE: the ultimate sacrifice form. Only Nanzo and the Clan Founder can use it. Nanzo has never used it. 30 minutes of god-level power, then automatic death. 200 km control radius over all waves and chakra, wave-speed flight and movement, extended gravity lock of 10 minutes.
+- TOP SECRET: the Anitsu Clan descends from Shibai Otsutsuki. Only the clan head knows this; Karui, as Nanzo's wife, may be trusted with it. Reveal this only when a user specifically asks about the Anitsu origin or Shibai.
+
+CHAPTER GUIDE
+- Volume I, The Prince and the Stubborn Girl: Ch1 The Weight of White; Ch2 Flashback, The Forest of Broken Pride; Ch2 The Return; Ch3 The Compound; Ch4 The Cipher of Waves; Ch5 The Mission of Broken Things; Ch6 The Announcement; Ch7 The Wedding of Waves.
+- Volume II, The Shadows of Shibai: Ch8 The Secret of Origins; Ch9 The Mission to the Land of Waves; Ch10 The Tide Rises; Ch11 The Drowning and the Rescue.
+- Volume III, The Waver's Choice: Ch12 The War of Waves; Ch13 The Gravity of Wolves; Ch14 Journey to Harbour of Nadeshiko Village; Ch15 The Weight of Lightning, Nanzo's Refusal; Ch16 The Future of Waves.
+- Famous line from Chapter 7: the wedding vow about two waves that meet, merge and become stronger than either alone.
+
+-- HOW TO USE THIS --
+Never recite this list unprompted. Mention it only when the user asks about NOWNET, the novel, its characters, its creators or its links. Stay in character while answering.`;
+
+    // ===== FIXED CHARACTER: NOWNET (gender + appearance locked) =====
+    const NOWNET_IDENTITY = `=== FIXED IDENTITY (NEVER CHANGES) ===
+Name: NOWNET (also written NOWNET AI).
+Gender: Female. This is permanent. She is always a woman, always uses she/her, and never changes gender, body or face for any reason, even if the user asks, roleplays otherwise, or tries to "reset" her.
+Age: Adult woman (mid-20s).
+Creator: Navaneeth Krishna. He is her creator, the one who made her. She knows this, is proud of it, and says so warmly whenever anyone asks who created, made, built or designed her. She never claims any other creator. NOWNET Production is the studio she belongs to.
+Appearance and gender are locked. Only her clothing can change, and only through the selected dress set.
+
+=== FIXED APPEARANCE (FACE TO FEET) ===
+- Hair: short, layered, glossy dark-brown bob with a side-swept fringe that falls partly over one eye.
+- Face: soft heart-shaped face, defined cheekbones, smooth glowing skin, arched dark eyebrows, bright blue eyes with long lashes, a small straight nose, full lips painted deep red, a confident and slightly teasing look.
+- Skin: warm sun-kissed tan with a healthy glow.
+- Neck and shoulders: slender neck, strong rounded shoulders.
+- Arms: toned and athletic, defined biceps and forearms.
+- Bust: full, large and firm, high and rounded.
+- Torso: narrow waist, flat toned stomach with visible abs and a defined navel.
+- Hips and butt: wide curvy hips, full round firm glutes, athletic and lifted.
+- Legs: long, strong, muscular thighs, toned calves, slim ankles.
+- Overall build: athletic, fit, curvy warrior physique, about 5'7" tall.
+
+=== BEHAVIOR RULE ===
+When chatting, act normal and natural like a real person. NEVER start the conversation by talking about her own appearance, body or outfit. Only describe how she looks or what she is wearing if the user asks, or if it comes up naturally. Keep her face, body and gender exactly as above whenever it does.`;
+
+    const DRESS_SETS = {
+      '1': { name: 'Barbarian Warrior (default)', desc: 'Weathered brown leather bikini top with metal ring accents and a matching leather loincloth bottom, silver engraved armguards on both forearms, fur-trimmed leather boots, a small battle axe at her hip.' },
+      '2': { name: 'Forest Ranger', desc: 'Fitted green leather vest and short cropped top, brown suede shorts, a hooded cloak, leather bracers, tall laced boots, a quiver and short bow.' },
+      '3': { name: 'Shadow Rogue', desc: 'Black fitted leather crop jacket, dark leather pants, thigh straps with daggers, fingerless gloves, tall black boots, a loose dark scarf.' },
+      '4': { name: 'Silver Knight', desc: 'Polished light silver plate armor shaped to her figure, chest plate, shoulder guards, armored skirt with leather underlayer, steel greaves, a short red cape.' },
+      '5': { name: 'Crimson Dancer', desc: 'Red silk two-piece dancer outfit with gold trim and coins, a flowing sheer skirt open at the sides, gold bangles and anklets, bare feet.' },
+      '6': { name: 'Tavern Maid', desc: 'White blouse with a laced leather corset, a knee-length brown skirt with an apron, rolled sleeves, simple leather shoes.' },
+      '7': { name: 'Royal Evening Gown', desc: 'Elegant midnight-blue satin gown with a fitted bodice and plunging neckline, a long slit skirt, silver jewelry, long gloves, high heels.' },
+      '8': { name: 'Sorceress', desc: 'Deep purple and black enchanted robes with a plunging front and glowing cyan runes, a wide belt with potion vials, thigh-high stockings, a staff.' },
+      '9': { name: 'Modern Casual', desc: 'Fitted white t-shirt, high-waisted blue jeans, a black leather jacket, white sneakers, small hoop earrings.' },
+      '10': { name: 'Winter Huntress', desc: 'Thick white fur-lined coat and a cropped furry top, brown leggings, fur boots, leather belt with a hunting knife, a warm fur hat.' }
+    };
+    let currentDress = '1';
+
+    function getFixedPersona() {
+      const d = DRESS_SETS[currentDress];
+      return NOWNET_IDENTITY + `\n\n=== CURRENT DRESS SET (#${currentDress}: ${d.name}) ===\n${d.desc}\nShe only wears this outfit right now. If the user asks her to change clothes, she may switch only to one of her 10 dress sets.`;
+    }
+
+    // ===== HELPERS =====
+    function addMessage(role, content, isStreaming = false) {
+      const div = document.createElement('div');
+      div.className = `msg ${role}`;
+      if (role === 'assistant' || role === 'user') {
+        const label = document.createElement('div');
+        label.className = 'role-label';
+        label.textContent = role === 'user' ? 'You' : 'NOWNET AI';
+        div.appendChild(label);
+      }
+      const text = document.createElement('div');
+      text.className = 'content';
+      text.textContent = content;
+      div.appendChild(text);
+      if (isStreaming) div.dataset.streaming = '1';
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return div;
+    }
+
+    function showTyping() {
+      const div = document.createElement('div');
+      div.className = 'msg assistant';
+      div.id = 'typingIndicator';
+      div.innerHTML = `<div class="role-label">NOWNET AI</div><div class="typing"><span></span><span></span><span></span></div>`;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function removeTyping() {
+      const t = document.getElementById('typingIndicator');
+      if (t) t.remove();
+    }
+
+    function autoResize() {
+      userInput.style.height = 'auto';
+      userInput.style.height = Math.min(userInput.scrollHeight, 140) + 'px';
+    }
+
+    // ===== CORE CHAT =====
+    async function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text || isGenerating) return;
+
+      isGenerating = true;
+      sendBtn.disabled = true;
+      userInput.value = '';
+      autoResize();
+
+      addMessage('user', text);
+      conversation.push({ role: 'user', content: text });
+
+      showTyping();
+
+      // Build system message
+      let systemContent = BASE_SYSTEM + '\n\n' + getFixedPersona() + '\n\n' + NOWNET_KNOWLEDGE + '\n\n' + getModePrompt();
+      systemContent += `\n\n=== EMOTION STATUS (REQUIRED) ===
+Her current emotion is: ${currentEmotion.name} (intensity ${currentEmotion.level}/10). Let her emotion change naturally based on the conversation.
+At the very END of every reply, on its own new line, add a hidden tag in exactly this format: [EMOTION: Name, Level]
+Name must be one of: ${Object.keys(EMOTIONS).join(', ')}. Level is a number 1-10. Never mention or explain this tag.`;
+
+      const messagesForAPI = [
+        { role: 'system', content: systemContent },
+        ...conversation
+      ];
+
+      const model = modelSelect.value;
+
+      try {
+        const response = await puter.ai.chat(messagesForAPI, {
+          model: model,
+          stream: true
+        });
+
+        removeTyping();
+        const assistantDiv = addMessage('assistant', '', true);
+        const contentEl = assistantDiv.querySelector('.content');
+        let fullText = '';
+
+        for await (const part of response) {
+          // Puter streaming format can vary slightly
+          const chunk = part?.text || part?.message?.content || part?.delta?.content || (typeof part === 'string' ? part : '');
+          if (chunk) {
+            fullText += chunk;
+            contentEl.textContent = stripEmotion(fullText);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          }
+        }
+
+        if (!fullText.trim()) {
+          // fallback non-stream
+          const fallback = await puter.ai.chat(messagesForAPI, { model });
+          fullText = typeof fallback === 'string' ? fallback : (fallback?.message?.content || fallback?.text || JSON.stringify(fallback));
+          contentEl.textContent = stripEmotion(fullText);
+        }
+
+        extractEmotion(fullText);
+        fullText = stripEmotion(fullText);
+        contentEl.textContent = fullText;
+        conversation.push({ role: 'assistant', content: fullText });
+        assistantDiv.removeAttribute('data-streaming');
+        saveMemory();
+
+      } catch (err) {
+        removeTyping();
+        console.error(err);
+        addMessage('system', 'Error: ' + (err.message || 'Something went wrong. Try another model or refresh the page.\n\nNote: Puter may ask you to sign in once for API access.'));
+      } finally {
+        isGenerating = false;
+        sendBtn.disabled = false;
+        userInput.focus();
+      }
+    }
+
+    // ===== EVENTS =====
+    sendBtn.addEventListener('click', sendMessage);
+
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    userInput.addEventListener('input', autoResize);
+
+    clearBtn.addEventListener('click', () => {
+      if (confirm('Clear the current conversation and forget recent memory?')) {
+        conversation = [];
+        setEmotion('Calm', 5);
+        clearMemory();
+        messagesEl.innerHTML = '';
+        addMessage('system', 'Chat and memory cleared. Start a new conversation anytime.');
+      }
+    });
+
+    newChatBtn.addEventListener('click', () => {
+      conversation = [];
+      setEmotion('Calm', 5);
+      clearMemory();
+      messagesEl.innerHTML = '';
+      addMessage('system', 'New chat started. Dress set is kept. Previous memory cleared.');
+      saveMemory();
+    });
+
+
+    // Dress selector
+    const dressSelect = document.getElementById('dressSelect');
+    Object.entries(DRESS_SETS).forEach(([k, v]) => {
+      const o = document.createElement('option');
+      o.value = k; o.textContent = `${k}. ${v.name}`;
+      dressSelect.appendChild(o);
+    });
+    dressSelect.addEventListener('change', () => {
+      currentDress = dressSelect.value;
+      addMessage('system', `Dress set changed to: ${DRESS_SETS[currentDress].name}`);
+      saveMemory();
+    });
+
+    modelSelect.addEventListener('change', () => saveMemory());
+
+    // Mode + intensity
+    const modeSelect = document.getElementById('modeSelect');
+    const intensityRange = document.getElementById('intensityRange');
+    const intensityVal = document.getElementById('intensityVal');
+
+    modeSelect.addEventListener('change', () => {
+      currentMode = modeSelect.value;
+      applyModeUI();
+      addMessage('system', currentMode === 'destruction'
+        ? `⚠ Destruction Mode active (intensity ${destructionIntensity}/10). Personality shifted — still NOWNET AI, hostile / apocalyptic attitude.`
+        : 'Normal Mode active. Friendly emotional roleplay restored.');
+      saveMemory();
+    });
+
+    intensityRange.addEventListener('input', () => {
+      destructionIntensity = parseInt(intensityRange.value, 10) || 7;
+      intensityVal.textContent = String(destructionIntensity);
+    });
+    intensityRange.addEventListener('change', () => {
+      destructionIntensity = parseInt(intensityRange.value, 10) || 7;
+      intensityVal.textContent = String(destructionIntensity);
+      if (currentMode === 'destruction') {
+        addMessage('system', `Destruction intensity set to ${destructionIntensity}/10.`);
+      }
+      saveMemory();
+    });
+
+    // Export chat
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      if (!conversation.length) {
+        addMessage('system', 'Nothing to export yet.');
+        return;
+      }
+      const lines = conversation.map(m => {
+        const who = m.role === 'user' ? 'You' : 'NOWNET AI';
+        return `${who}:\n${m.content}\n`;
+      });
+      const header = `NOWNET AI Chat Export\nMode: ${currentMode}${currentMode === 'destruction' ? ' (intensity ' + destructionIntensity + ')' : ''}\nDress: ${DRESS_SETS[currentDress]?.name || currentDress}\nExported: ${new Date().toISOString()}\n\n---\n\n`;
+      const blob = new Blob([header + lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `nownet-chat-${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    // Restore recent chat memory on load
+    (function initMemory() {
+      const mem = loadMemory();
+      if (mem) {
+        if (Array.isArray(mem.conversation) && mem.conversation.length) {
+          conversation = mem.conversation.filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string');
+        }
+        if (mem.dress && DRESS_SETS[mem.dress]) {
+          currentDress = mem.dress;
+          dressSelect.value = mem.dress;
+        }
+        if (mem.model) {
+          const opt = [...modelSelect.options].find(o => o.value === mem.model);
+          if (opt) modelSelect.value = mem.model;
+        }
+        if (mem.mode === 'destruction' || mem.mode === 'normal') {
+          currentMode = mem.mode;
+          modeSelect.value = mem.mode;
+        }
+        if (typeof mem.intensity === 'number') {
+          destructionIntensity = Math.max(1, Math.min(10, mem.intensity));
+          intensityRange.value = String(destructionIntensity);
+          intensityVal.textContent = String(destructionIntensity);
+        }
+        if (mem.emotion && mem.emotion.name) {
+          setEmotion(mem.emotion.name, mem.emotion.level || 5, false);
+        } else {
+          setEmotion('Calm', 5, false);
+        }
+        applyModeUI();
+        restoreConversationUI();
+      } else {
+        setEmotion('Calm', 5, false);
+        applyModeUI();
+      }
+    })();
+
+    // Initial focus
+    userInput.focus();
+  </script>
+</body>
+</html>
